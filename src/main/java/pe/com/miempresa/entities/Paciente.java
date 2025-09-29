@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -28,22 +29,27 @@ public class Paciente {
     private Integer idPaciente;
 
     @Column(name = "nombres", nullable = false, length = 50)
+    @NotBlank(message = "El campo nombres es requerido.")
     @Size(min = 3, max = 50, message = "El nombre debe tener minimo 3 caracteres.")
     private String nombres;
 
     @Column(name = "apellidos", nullable = false, length = 50)
+    @NotBlank(message = "El campo apellidos es requerido.")
     @Size(min = 3, max = 50, message = "El apellidos debe tener minimo 3 caracteres.")
     private String apellidos;
 
     @Column(name = "direccion", nullable = false, length = 200)
+    @NotBlank(message = "El campo direccion es requerido.")
     @Size(min = 3, max = 200, message = "La direccion debe tener minimo 3 caracteres.")
     private String direccion;
 
     @Column(name = "telefono", nullable = false, length = 9)
-    @Size(min = 9, message = "El telefono debe tener minimo 9 caracteres.")
+    @NotBlank(message = "El campo telefono es requerido.")
+    @Size(min = 9, max = 9, message = "El telefono debe tener minimo 9 caracteres.")
     private String telefono;
 
     @Column(name = "correo", nullable = false, length = 100)
+    @NotBlank(message = "El campo correo es requerido.")
     @Email
     private String correo;
 
