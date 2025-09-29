@@ -4,6 +4,8 @@
  */
 package pe.com.miempresa.controllers;
 
+import jakarta.validation.Valid;
+import java.net.URI;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pe.com.miempresa.entities.Paciente;
 import pe.com.miempresa.services.PacienteService;
 
@@ -38,9 +41,11 @@ public class PacienteRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Paciente paciente) {
+    public ResponseEntity<Object> post(@Valid @RequestBody Paciente paciente) {
         Paciente p = pacienteService.insertar(paciente);
-        return ResponseEntity.ok(p);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(p.getIdPaciente()).toUri();
+        return  ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
@@ -49,7 +54,7 @@ public class PacienteRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody Paciente paciente) {
+    public ResponseEntity<?> put(@PathVariable Integer id, @Valid @RequestBody Paciente paciente) {
         paciente.setIdPaciente(id);
         Paciente p = pacienteService.actualizar(paciente);
         return ResponseEntity.ok(p);
