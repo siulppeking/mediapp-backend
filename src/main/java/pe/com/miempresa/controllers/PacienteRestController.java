@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pe.com.miempresa.entities.Paciente;
+import pe.com.miempresa.exceptions.ModelNotFoundException;
 import pe.com.miempresa.services.PacienteService;
 
 /**
@@ -45,12 +46,16 @@ public class PacienteRestController {
         Paciente p = pacienteService.insertar(paciente);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(p.getIdPaciente()).toUri();
-        return  ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
     public Paciente get(@PathVariable("id") Integer id) {
-        return pacienteService.buscarPorId(id);
+        Paciente paciente = pacienteService.buscarPorId(id);
+        if (paciente == null) {
+            throw new ModelNotFoundException("Id [" + id + "] no encontrado.");
+        }
+        return paciente;
     }
 
     @PutMapping("/{id}")
@@ -63,12 +68,11 @@ public class PacienteRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         Paciente p = pacienteService.buscarPorId(id);
-        if (p != null) {
-            pacienteService.eliminar(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (p == null) {
+            throw new ModelNotFoundException("Id [" + id + "] no encontrado.");
         }
+        pacienteService.eliminar(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
