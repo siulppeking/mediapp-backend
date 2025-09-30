@@ -4,32 +4,39 @@
  */
 package pe.com.miempresa.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
  *
- * @author dukz
+ * @author lescobar
  */
 @Data
 @Entity
-@Table(name = "especialidad")
-public class Especialidad {
+@Table(name = "detalle_consulta")
+public class DetalleConsulta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idEspecialidad;
+    private int idDetalle;
 
-    @Column(name = "nombre", nullable = false, length = 30)
-    @NotBlank(message = "El campo nombre es requerido.")
-    @Size(min = 3, max = 30, message = "El nombre debe tener minimo 3 caracteres.")
-    private String nombre;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "id_consulta", nullable = false)
+    private Consulta consulta;
 
+    @Column(name = "diagnostico", nullable = false, length = 70)
+    private String diagnostico;
+
+    @Column(name = "tratamiento", nullable = false, length = 300)
+    private String tratamiento;
+    
 }
