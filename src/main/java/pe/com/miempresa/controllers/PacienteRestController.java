@@ -4,6 +4,10 @@
  */
 package pe.com.miempresa.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +20,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import pe.com.miempresa.dto.PacienteResponse;
 import pe.com.miempresa.entities.Paciente;
 import pe.com.miempresa.services.PacienteService;
-import pe.com.miempresa.utils.ApiResponse;
+import pe.com.miempresa.utils.DataResponse;
 
 /**
  *
  * @author dukz
  */
+@Tag(name = "Paciente API", description = "Esta API contiene la funcionalidad de los Pacientes")
 @RestController
 @RequestMapping("/api/pacientes")
 @RequiredArgsConstructor
@@ -31,35 +37,40 @@ public class PacienteRestController {
 
     private final PacienteService pacienteService;
 
-    @GetMapping()
-    public ResponseEntity<ApiResponse> listar() {
-        ApiResponse ar = new ApiResponse();
+    @GetMapping
+    @Operation(description = "Retorna toda la lista de pacientes.", summary = "Retorna 200 | OK")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Success"),
+        @ApiResponse(responseCode = "500", description = "Error")
+    })
+    public ResponseEntity<DataResponse> listar() {
+        DataResponse dr = new DataResponse();
         try {
-            List<Paciente> lista = pacienteService.listar();
-            ar.setStatus(ApiResponse.Success);
-            ar.setData(lista);
+            List<PacienteResponse> lista = pacienteService.listar();
+            dr.setStatus(DataResponse.Success);
+            dr.setData(lista);
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
-            ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            dr.setStatus(DataResponse.Error);
+            dr.setData(e.getMessage());
+            dr.setMessage(DataResponse.MensajeController);
         }
-        return ResponseEntity.ok(ar);
+        return ResponseEntity.ok(dr);
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> insertar(@Valid @RequestBody Paciente paciente) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> insertar(@Valid @RequestBody Paciente paciente) {
+        DataResponse dr = new DataResponse();
         try {
             Paciente p = pacienteService.insertar(paciente);
-            ar.setStatus(ApiResponse.Success);
-            ar.setData(p);
-            ar.setMessage("El paciente fue creado correctamente.");
+            dr.setStatus(DataResponse.Success);
+            dr.setData(p);
+            dr.setMessage("El paciente fue creado correctamente.");
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
-            ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            dr.setStatus(DataResponse.Error);
+            dr.setData(e.getMessage());
+            dr.setMessage(DataResponse.MensajeController);
         }
-        return ResponseEntity.ok(ar);
+        return ResponseEntity.ok(dr);
     }
 
     /*
@@ -72,67 +83,67 @@ public class PacienteRestController {
     }
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> buscarPorId(@PathVariable("id") Integer id) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> buscarPorId(@PathVariable("id") Integer id) {
+        DataResponse dr = new DataResponse();
         try {
             Paciente paciente = pacienteService.buscarPorId(id);
             if (paciente == null) {
-                ar.setStatus(ApiResponse.Warning);
-                ar.setMessage("Paciente con ID [" + id + "] no encontrado.");
+                dr.setStatus(DataResponse.Warning);
+                dr.setMessage("Paciente con ID [" + id + "] no encontrado.");
             } else {
-                ar.setStatus(ApiResponse.Success);
-                ar.setData(paciente);
+                dr.setStatus(DataResponse.Success);
+                dr.setData(paciente);
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
-            ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            dr.setStatus(DataResponse.Error);
+            dr.setData(e.getMessage());
+            dr.setMessage(DataResponse.MensajeController);
         }
-        return ResponseEntity.ok(ar);
+        return ResponseEntity.ok(dr);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> actualizar(@PathVariable Integer id, @Valid @RequestBody Paciente paciente) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> actualizar(@PathVariable Integer id, @Valid @RequestBody Paciente paciente) {
+        DataResponse dr = new DataResponse();
         try {
             Paciente pacienteTemp = pacienteService.buscarPorId(id);
             if (pacienteTemp == null) {
-                ar.setStatus(ApiResponse.Warning);
-                ar.setMessage("Paciente con ID [" + id + "] no encontrado.");
+                dr.setStatus(DataResponse.Warning);
+                dr.setMessage("Paciente con ID [" + id + "] no encontrado.");
             } else {
                 paciente.setIdPaciente(id);
                 Paciente p = pacienteService.actualizar(paciente);
-                ar.setStatus(ApiResponse.Success);
-                ar.setData(p);
-                ar.setMessage("El paciente fue modificado correctamente.");
+                dr.setStatus(DataResponse.Success);
+                dr.setData(p);
+                dr.setMessage("El paciente fue modificado correctamente.");
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
-            ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            dr.setStatus(DataResponse.Error);
+            dr.setData(e.getMessage());
+            dr.setMessage(DataResponse.MensajeController);
         }
-        return ResponseEntity.ok(ar);
+        return ResponseEntity.ok(dr);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> eliminar(@PathVariable("id") Integer id) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> eliminar(@PathVariable("id") Integer id) {
+        DataResponse dr = new DataResponse();
         try {
             Paciente pacienteTemp = pacienteService.buscarPorId(id);
             if (pacienteTemp == null) {
-                ar.setStatus(ApiResponse.Warning);
-                ar.setMessage("Paciente con ID [" + id + "] no encontrado.");
+                dr.setStatus(DataResponse.Warning);
+                dr.setMessage("Paciente con ID [" + id + "] no encontrado.");
             } else {
                 pacienteService.eliminar(id);
-                ar.setStatus(ApiResponse.Success);
-                ar.setMessage("El paciente fue eliminado correctamente.");
+                dr.setStatus(DataResponse.Success);
+                dr.setMessage("El paciente fue eliminado correctamente.");
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
-            ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            dr.setStatus(DataResponse.Error);
+            dr.setData(e.getMessage());
+            dr.setMessage(DataResponse.MensajeController);
         }
-        return ResponseEntity.ok(ar);
+        return ResponseEntity.ok(dr);
     }
 
 }

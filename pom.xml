@@ -18,6 +18,7 @@
         
     <properties>
         <java.version>17</java.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
         
     <dependencies>
@@ -69,6 +70,19 @@
             <version>2.8.13</version>
         </dependency>
         
+        <!-- Oracle -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+        </dependency>
+        
+        <!-- Mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version> 
+        </dependency>
+        
     </dependencies>
 
     <build>
@@ -86,6 +100,11 @@
                             <artifactId>lombok</artifactId>
                             <version>1.18.30</version>
                         </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path> 
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

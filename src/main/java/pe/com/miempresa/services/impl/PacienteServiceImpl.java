@@ -7,6 +7,8 @@ package pe.com.miempresa.services.impl;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import pe.com.miempresa.common.PacienteResponseMapper;
+import pe.com.miempresa.dto.PacienteResponse;
 import pe.com.miempresa.entities.Paciente;
 import pe.com.miempresa.repositories.PacienteRepository;
 import pe.com.miempresa.services.PacienteService;
@@ -19,14 +21,18 @@ import pe.com.miempresa.services.PacienteService;
 public class PacienteServiceImpl implements PacienteService {
 
     private final PacienteRepository pacienteRepository;
+    private final PacienteResponseMapper prm;
 
-    public PacienteServiceImpl(PacienteRepository pacienteRepository) {
+    public PacienteServiceImpl(PacienteRepository pacienteRepository, PacienteResponseMapper prm) {
         this.pacienteRepository = pacienteRepository;
+        this.prm = prm;
     }
 
     @Override
-    public List<Paciente> listar() {
-        return pacienteRepository.findAll();
+    public List<PacienteResponse> listar() {
+        List<Paciente> pacientes = pacienteRepository.findAll();
+        List<PacienteResponse> pacientesResponse = prm.PacienteListToPacienteResponseList(pacientes);
+        return pacientesResponse;
     }
 
     @Override

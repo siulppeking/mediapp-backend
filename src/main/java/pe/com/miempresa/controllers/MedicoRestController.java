@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import pe.com.miempresa.entities.Medico;
 import pe.com.miempresa.services.MedicoService;
-import pe.com.miempresa.utils.ApiResponse;
+import pe.com.miempresa.utils.DataResponse;
 
 /**
  *
@@ -32,96 +32,96 @@ public class MedicoRestController {
     private final MedicoService medicoService;
 
     @GetMapping()
-    public ResponseEntity<ApiResponse> listar() {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> listar() {
+        DataResponse ar = new DataResponse();
         try {
             List<Medico> lista = medicoService.listar();
-            ar.setStatus(ApiResponse.Success);
+            ar.setStatus(DataResponse.Success);
             ar.setData(lista);
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
+            ar.setStatus(DataResponse.Error);
             ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            ar.setMessage(DataResponse.MensajeController);
         }
         return ResponseEntity.ok(ar);
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> insertar(@Valid @RequestBody Medico medico) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> insertar(@Valid @RequestBody Medico medico) {
+        DataResponse ar = new DataResponse();
         try {
             Medico p = medicoService.insertar(medico);
-            ar.setStatus(ApiResponse.Success);
+            ar.setStatus(DataResponse.Success);
             ar.setData(p);
             ar.setMessage("El medico fue creado correctamente.");
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
+            ar.setStatus(DataResponse.Error);
             ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            ar.setMessage(DataResponse.MensajeController);
         }
         return ResponseEntity.ok(ar);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> buscarPorId(@PathVariable("id") Integer id) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> buscarPorId(@PathVariable("id") Integer id) {
+        DataResponse ar = new DataResponse();
         try {
             Medico medico = medicoService.buscarPorId(id);
             if (medico == null) {
-                ar.setStatus(ApiResponse.Warning);
+                ar.setStatus(DataResponse.Warning);
                 ar.setMessage("Medico con ID [" + id + "] no encontrado.");
             } else {
-                ar.setStatus(ApiResponse.Success);
+                ar.setStatus(DataResponse.Success);
                 ar.setData(medico);
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
+            ar.setStatus(DataResponse.Error);
             ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            ar.setMessage(DataResponse.MensajeController);
         }
         return ResponseEntity.ok(ar);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> actualizar(@PathVariable Integer id, @Valid @RequestBody Medico medico) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> actualizar(@PathVariable Integer id, @Valid @RequestBody Medico medico) {
+        DataResponse ar = new DataResponse();
         try {
             Medico medicoTemp = medicoService.buscarPorId(id);
             if (medicoTemp == null) {
-                ar.setStatus(ApiResponse.Warning);
+                ar.setStatus(DataResponse.Warning);
                 ar.setMessage("Medico con ID [" + id + "] no encontrado.");
             } else {
                 medico.setIdMedico(id);
                 Medico p = medicoService.actualizar(medico);
-                ar.setStatus(ApiResponse.Success);
+                ar.setStatus(DataResponse.Success);
                 ar.setData(p);
                 ar.setMessage("El medico fue modificado correctamente.");
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
+            ar.setStatus(DataResponse.Error);
             ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            ar.setMessage(DataResponse.MensajeController);
         }
         return ResponseEntity.ok(ar);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> eliminar(@PathVariable("id") Integer id) {
-        ApiResponse ar = new ApiResponse();
+    public ResponseEntity<DataResponse> eliminar(@PathVariable("id") Integer id) {
+        DataResponse ar = new DataResponse();
         try {
             Medico medicoTemp = medicoService.buscarPorId(id);
             if (medicoTemp == null) {
-                ar.setStatus(ApiResponse.Warning);
+                ar.setStatus(DataResponse.Warning);
                 ar.setMessage("Medico con ID [" + id + "] no encontrado.");
             } else {
                 medicoService.eliminar(id);
-                ar.setStatus(ApiResponse.Success);
+                ar.setStatus(DataResponse.Success);
                 ar.setMessage("El medico fue eliminado correctamente.");
             }
         } catch (Exception e) {
-            ar.setStatus(ApiResponse.Error);
+            ar.setStatus(DataResponse.Error);
             ar.setData(e.getMessage());
-            ar.setMessage(ApiResponse.MensajeController);
+            ar.setMessage(DataResponse.MensajeController);
         }
         return ResponseEntity.ok(ar);
     }

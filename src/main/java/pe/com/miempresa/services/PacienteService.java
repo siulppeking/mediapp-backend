@@ -5,6 +5,7 @@
 package pe.com.miempresa.services;
 
 import java.util.List;
+import pe.com.miempresa.dto.PacienteResponse;
 import pe.com.miempresa.entities.Paciente;
 
 /**
@@ -13,7 +14,7 @@ import pe.com.miempresa.entities.Paciente;
  */
 public interface PacienteService {
 
-    public List<Paciente> listar();
+    public List<PacienteResponse> listar();
 
     public Paciente insertar(Paciente paciente);
 
@@ -22,5 +23,5 @@ public interface PacienteService {
     public Paciente actualizar(Paciente paciente);
 
     public void eliminar(Integer idPaciente);
-    
+
 }
