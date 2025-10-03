@@ -32,7 +32,7 @@ public class ParametroController {
         DataResponse ar = new DataResponse();
         try {
             List<Parametro> lista = new ArrayList<>();
-            Connection conn = DataSourceDB.getInstance().getConnection();
+            Connection conn = null;//DataSourceDB.getInstance().getConnection();
             CallableStatement cs = conn.prepareCall("{ call SICS.UPKG_PARAM.USP_PAGINAR(?,?,?,?) }");
             cs.setInt(1, 1);
             cs.setInt(2, 20);
