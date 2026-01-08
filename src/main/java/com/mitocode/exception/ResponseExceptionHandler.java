@@ -30,6 +30,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DomainCustomException.class)
+    public ResponseEntity<CustomErrorTemplate> handleDomainCustomException(DomainCustomException ex, WebRequest request) {
+        CustomErrorTemplate err = new CustomErrorTemplate(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
     //Desde Spring Boot 3+
     /*@ExceptionHandler(ModelNotFoundException.class)
     public ProblemDetail handleModelNotFoundException(ModelNotFoundException ex, WebRequest request) {
